@@ -1,0 +1,31 @@
+# FinRelief AI — gitignore
+
+# ── Secrets & environment ─────────────────────────────────────────────────────
+.env
+*.env
+
+# ── Database (auto-created on first run, don't commit real user data) ─────────
+finrelief.db
+*.db
+*.sqlite3
+
+# ── Python ────────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+.Python
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+env/
+.eggs/
+
+# ── IDE / Editor ──────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db

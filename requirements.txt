@@ -5,4 +5,6 @@ bcrypt
 python-jose[cryptography]
 python-multipart
 email-validator
-pydantic
+pydantic[email]
+google-generativeai
+aiofiles

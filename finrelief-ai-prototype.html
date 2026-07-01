@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FinRelief AI</title>
+<title>FinRelief AI — Debt Settlement Assistant</title>
+<meta name="description" content="FinRelief AI helps you assess your debt stress, compute One Time Settlement recommendations, and generate professional negotiation letters.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -21,6 +22,8 @@
     --red-bg:#FBEBEB;
     --green:#3E6B4F;
     --green-bg:#EAF2EC;
+    --blue:#2B5CB8;
+    --blue-bg:#EBF0FB;
     --radius:12px;
     --radius-sm:8px;
   }
@@ -35,28 +38,20 @@
   .serif{font-family:'Fraunces',serif;}
   h1,h2,h3{font-family:'Fraunces',serif;font-weight:500;margin:0;}
   button{font-family:'Inter',sans-serif;cursor:pointer;}
-  input{font-family:'Inter',sans-serif;}
+  input,select{font-family:'Inter',sans-serif;}
 
-  /* App shell */
+  /* ---- App shell ---- */
   #app{display:flex;min-height:100vh;}
   .sidebar{
-    width:248px;
-    flex-shrink:0;
-    background:var(--cream);
-    border-right:1px solid var(--cream-line);
-    padding:28px 20px;
-    display:flex;
-    flex-direction:column;
-    justify-content:space-between;
-    position:sticky;
-    top:0;
-    height:100vh;
+    width:248px;flex-shrink:0;
+    background:var(--cream);border-right:1px solid var(--cream-line);
+    padding:28px 20px;display:flex;flex-direction:column;justify-content:space-between;
+    position:sticky;top:0;height:100vh;
   }
   .brand{
     display:flex;align-items:center;gap:8px;
     font-family:'Fraunces',serif;font-size:20px;font-weight:600;
-    padding:0 6px 8px 6px;
-    margin-bottom:28px;
+    padding:0 6px 8px 6px;margin-bottom:28px;
   }
   .mark{
     width:26px;height:26px;border-radius:7px;background:var(--ink);
@@ -64,21 +59,12 @@
     flex-shrink:0;position:relative;
   }
   .mark::after{
-    content:'F';
-    font-family:'Fraunces',serif;
-    font-weight:600;
-    font-size:15px;
-    color:var(--cream);
-    line-height:1;
-    transform:translate(-0.5px,0.5px);
+    content:'F';font-family:'Fraunces',serif;font-weight:600;font-size:15px;
+    color:var(--cream);line-height:1;transform:translate(-0.5px,0.5px);
   }
   .mark::before{
-    content:'';
-    position:absolute;
-    top:6px;right:5px;
-    width:3px;height:3px;
-    border-radius:50%;
-    background:var(--amber);
+    content:'';position:absolute;top:6px;right:5px;
+    width:3px;height:3px;border-radius:50%;background:var(--amber);
   }
   .brand .mark{width:22px;height:22px;border-radius:6px;}
   .brand .mark::after{font-size:13px;}
@@ -88,9 +74,8 @@
     display:flex;align-items:center;gap:10px;
     padding:10px 12px;border-radius:var(--radius-sm);
     color:var(--ink-soft);font-size:14.5px;font-weight:500;
-    text-decoration:none;
-    border:1px solid transparent;
-    transition:background .12s ease, color .12s ease;
+    text-decoration:none;border:1px solid transparent;
+    transition:background .12s ease,color .12s ease;cursor:pointer;
   }
   .navitem svg{width:17px;height:17px;flex-shrink:0;opacity:.75;}
   .navitem:hover{background:rgba(0,0,0,0.035);}
@@ -121,11 +106,8 @@
   }
   .headbtn:hover{border-color:var(--ink);color:var(--ink);}
 
-  /* cards */
-  .card{
-    background:var(--white);border:1px solid var(--hairline);
-    border-radius:var(--radius);padding:20px;
-  }
+  /* ---- Cards ---- */
+  .card{background:var(--white);border:1px solid var(--hairline);border-radius:var(--radius);padding:20px;}
   .stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px;}
   .stat-card{padding:18px 18px 16px;}
   .stat-label{font-size:12px;color:var(--gray-500);text-transform:uppercase;letter-spacing:.04em;font-weight:600;margin-bottom:10px;}
@@ -138,15 +120,13 @@
   .badge.healthy{background:var(--green-bg);color:var(--green);}
   .badge.tight{background:var(--amber-bg);color:var(--amber);}
   .badge.high{background:var(--red-bg);color:var(--red);}
+  .badge.ai{background:var(--blue-bg);color:var(--blue);}
   .badge.dot::before{content:'';width:6px;height:6px;border-radius:50%;background:currentColor;}
 
   .section-title{font-size:15px;font-weight:600;margin-bottom:12px;font-family:'Inter',sans-serif;}
 
   table{width:100%;border-collapse:collapse;font-size:13.5px;}
-  th{
-    text-align:left;font-size:11.5px;text-transform:uppercase;letter-spacing:.04em;
-    color:var(--gray-500);font-weight:600;padding:0 14px 10px;border-bottom:1px solid var(--hairline);
-  }
+  th{text-align:left;font-size:11.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--gray-500);font-weight:600;padding:0 14px 10px;border-bottom:1px solid var(--hairline);}
   td{padding:13px 14px;border-bottom:1px solid var(--hairline);}
   tr:last-child td{border-bottom:none;}
   tbody tr:hover{background:rgba(0,0,0,0.015);}
@@ -154,36 +134,35 @@
 
   .grid-2{display:grid;grid-template-columns:1.5fr 1fr;gap:20px;align-items:start;}
 
-  /* buttons */
+  /* ---- Buttons ---- */
   .btn{
     padding:11px 20px;border-radius:var(--radius-sm);font-size:14px;font-weight:600;
-    border:1px solid transparent;display:inline-flex;align-items:center;gap:8px;
+    border:1px solid transparent;display:inline-flex;align-items:center;gap:8px;transition:opacity .1s ease;
   }
   .btn-primary{background:var(--ink);color:#fff;}
   .btn-primary:hover{background:#000;}
   .btn-secondary{background:transparent;border:1px solid var(--hairline);color:var(--ink-soft);}
   .btn-secondary:hover{border-color:var(--ink);color:var(--ink);}
+  .btn-danger{background:transparent;border:1px solid var(--hairline);color:var(--red);}
+  .btn-danger:hover{background:var(--red-bg);border-color:var(--red);}
   .btn:disabled{opacity:.45;cursor:not-allowed;}
+  .btn-icon{padding:7px 10px;border-radius:var(--radius-sm);border:1px solid var(--hairline);background:transparent;color:var(--gray-500);display:inline-flex;align-items:center;gap:4px;font-size:13px;font-weight:500;}
+  .btn-icon:hover{border-color:var(--red);color:var(--red);}
+  .btn-icon.edit:hover{border-color:var(--ink);color:var(--ink);}
 
-  .actionbar{
-    display:flex;justify-content:space-between;margin-top:24px;
-    padding-top:18px;border-top:1px solid var(--hairline);
-  }
+  .actionbar{display:flex;justify-content:space-between;margin-top:24px;padding-top:18px;border-top:1px solid var(--hairline);}
 
-  /* forms */
+  /* ---- Forms ---- */
   .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
   .field{display:flex;flex-direction:column;gap:6px;}
   .field label{font-size:12.5px;font-weight:600;color:var(--ink-soft);}
-  .field input, .field select{
-    padding:10px 12px;border:1px solid var(--hairline);border-radius:var(--radius-sm);
-    font-size:14px;color:var(--ink);background:var(--white);
-  }
-  .field input:focus, .field select:focus{outline:2px solid var(--ink);outline-offset:1px;}
+  .field input,.field select{padding:10px 12px;border:1px solid var(--hairline);border-radius:var(--radius-sm);font-size:14px;color:var(--ink);background:var(--white);}
+  .field input:focus,.field select:focus{outline:2px solid var(--ink);outline-offset:1px;}
   .prefix-input{position:relative;}
   .prefix-input span{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--gray-500);font-size:14px;}
   .prefix-input input{padding-left:26px;}
 
-  /* settlement page */
+  /* ---- Settlement page ---- */
   .breakdown-row{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid var(--hairline);}
   .breakdown-row:last-child{border-bottom:none;}
   .breakdown-label{font-size:13.5px;color:var(--ink-soft);}
@@ -195,6 +174,7 @@
   .rec-pct{font-family:'Fraunces',serif;font-size:44px;font-weight:500;line-height:1;}
   .rec-amt{font-size:14px;color:#D8D5CB;margin-top:4px;}
   .rec-source{display:inline-flex;align-items:center;gap:6px;margin-top:14px;font-size:11.5px;padding:4px 10px;border-radius:99px;background:rgba(255,255,255,0.12);}
+  .rec-source.ai-source{background:rgba(100,160,255,0.2);color:#a8c8ff;}
   .rec-mini{display:flex;justify-content:space-between;font-size:13px;color:#CFCCC2;padding:8px 0;border-top:1px solid rgba(255,255,255,0.12);margin-top:14px;}
   .rec-mini + .rec-mini{border-top:none;padding-top:0;}
 
@@ -203,28 +183,29 @@
   .slider-row-head{display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px;}
   .slider-row-head b{font-family:'Fraunces',serif;font-weight:500;font-size:14.5px;}
   input[type=range]{width:100%;accent-color:var(--ink);height:4px;}
-  .proto-note{font-size:11.5px;color:var(--gray-500);margin-top:16px;font-style:italic;}
+  .slider-note{font-size:11.5px;color:var(--gray-500);margin-top:16px;font-style:italic;}
 
-  /* letters */
+  /* ---- Letters ---- */
   .letter-paper{
     background:var(--white);border:1px solid var(--hairline);border-radius:var(--radius);
     padding:40px 44px;font-size:14px;line-height:1.75;color:#2A2822;
     white-space:pre-wrap;font-family:'Inter',sans-serif;
   }
   .letter-toolbar{display:flex;gap:10px;margin-bottom:16px;}
-  .history-item{display:flex;justify-content:space-between;align-items:center;padding:12px 4px;border-bottom:1px solid var(--hairline);font-size:13.5px;}
+  .history-item{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:12px 8px;border-bottom:1px solid var(--hairline);font-size:13.5px;
+    cursor:pointer;border-radius:var(--radius-sm);transition:background .1s;
+  }
   .history-item:last-child{border-bottom:none;}
+  .history-item:hover{background:rgba(0,0,0,0.02);}
+  .history-item.active-letter{background:var(--cream);border-left:3px solid var(--amber);padding-left:12px;}
   .history-item .hl-lender{font-weight:600;}
   .history-item .hl-meta{color:var(--gray-500);font-size:12px;margin-top:2px;}
 
-  /* login */
-  .auth-wrap{
-    min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--cream);
-  }
-  .auth-card{
-    width:380px;background:var(--white);border:1px solid var(--cream-line);border-radius:16px;
-    padding:36px 32px;
-  }
+  /* ---- Auth ---- */
+  .auth-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--cream);}
+  .auth-card{width:380px;background:var(--white);border:1px solid var(--cream-line);border-radius:16px;padding:36px 32px;}
   .auth-brand{display:flex;align-items:center;gap:8px;justify-content:center;margin-bottom:6px;font-family:'Fraunces',serif;font-size:22px;font-weight:600;}
   .auth-brand .mark{width:22px;height:22px;border-radius:6px;background:var(--ink);}
   .auth-sub{text-align:center;color:var(--gray-500);font-size:13px;margin-bottom:24px;}
@@ -233,7 +214,7 @@
   .auth-toggle a{color:var(--ink);font-weight:600;text-decoration:none;cursor:pointer;}
   .auth-err{font-size:12.5px;color:var(--red);margin-bottom:10px;min-height:16px;}
 
-  /* chart */
+  /* ---- Chart ---- */
   .chart-wrap{margin-top:6px;}
   .chart-legend{display:flex;gap:16px;font-size:12px;color:var(--gray-500);margin-bottom:10px;}
   .chart-legend span{display:inline-flex;align-items:center;gap:5px;}
@@ -246,9 +227,50 @@
   .loan-name-cell span{font-size:11.5px;color:var(--gray-500);}
 
   .clickable-row{cursor:pointer;}
+  .action-cell{display:flex;gap:6px;justify-content:flex-end;}
+
+  /* ---- Inline edit form ---- */
+  .edit-row td{padding:0 !important;border-bottom:1px solid var(--hairline);}
+  .edit-form{padding:16px 14px;background:var(--cream);display:grid;grid-template-columns:repeat(6,1fr);gap:10px;align-items:end;}
+  .edit-form .field label{font-size:11px;}
+  .edit-form .field input,.edit-form .field select{padding:7px 10px;font-size:13px;}
+  .edit-form-actions{display:flex;gap:8px;align-items:center;padding-top:2px;}
+
+  /* ---- Toast notifications ---- */
+  #toastContainer{
+    position:fixed;bottom:24px;right:24px;z-index:9999;
+    display:flex;flex-direction:column;gap:10px;pointer-events:none;
+  }
+  .toast{
+    background:var(--ink);color:#fff;padding:13px 18px;border-radius:10px;
+    font-size:13.5px;font-weight:500;pointer-events:all;
+    display:flex;align-items:center;gap:10px;
+    animation:toastIn .22s ease;max-width:320px;line-height:1.4;
+    box-shadow:0 4px 20px rgba(0,0,0,0.25);
+  }
+  .toast.success{background:var(--green);}
+  .toast.error{background:var(--red);}
+  .toast.warning{background:var(--amber);}
+  @keyframes toastIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+  @keyframes toastOut{from{opacity:1;transform:translateY(0);}to{opacity:0;transform:translateY(8px);}}
+  .toast.hiding{animation:toastOut .2s ease forwards;}
+
+  /* ---- Loading spinner ---- */
+  .spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,0.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;}
+  .spinner.dark{border-color:rgba(0,0,0,0.15);border-top-color:var(--ink);}
+  @keyframes spin{to{transform:rotate(360deg);}}
+
+  /* ---- Insight card ---- */
+  .insight-card{background:var(--ink);color:#fff;border-radius:var(--radius);padding:18px 20px;}
+  .insight-eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:#B9B6AC;font-weight:600;margin-bottom:8px;}
+  .insight-text{font-size:13px;line-height:1.65;color:#D8D5CB;}
+  .insight-action{margin-top:14px;}
 </style>
 </head>
 <body>
+
+<!-- ============ TOAST CONTAINER ============ -->
+<div id="toastContainer"></div>
 
 <!-- ============ AUTH SCREEN ============ -->
 <div class="auth-wrap" id="authScreen">
@@ -258,15 +280,15 @@
     <div class="auth-err" id="authErr"></div>
     <form id="authForm" data-form="auth">
       <div class="auth-field" id="nameFieldWrap" style="display:none;">
-        <div class="field"><label>Full name</label><input type="text" id="authName" placeholder="Kisuke" value="Kisuke"></div>
+        <div class="field"><label>Full name</label><input type="text" id="authName" placeholder="Your name"></div>
       </div>
       <div class="auth-field">
-        <div class="field"><label>Email</label><input type="email" id="authEmail" placeholder="you@example.com" value="kisuke18@gmail.com"></div>
+        <div class="field"><label>Email</label><input type="email" id="authEmail" placeholder="you@example.com"></div>
       </div>
       <div class="auth-field">
-        <div class="field"><label>Password</label><input type="password" id="authPassword" placeholder="••••••••" value="kisuke18@00"></div>
+        <div class="field"><label>Password</label><input type="password" id="authPassword" placeholder="••••••••"></div>
       </div>
-      <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;margin-top:6px;">Log in</button>
+      <button type="submit" id="authSubmitBtn" class="btn btn-primary" style="width:100%;justify-content:center;margin-top:6px;">Log in</button>
     </form>
     <div class="auth-toggle" id="authToggle">New here? <a data-action="toggleAuthMode">Create an account</a></div>
   </div>
@@ -300,7 +322,7 @@
       <div class="userchip" data-action="logout">
         <div class="avatar" id="userAvatar">K</div>
         <div>
-          <div class="uname" id="userName">Kisuke</div>
+          <div class="uname" id="userName">User</div>
           <div class="uemail">Log out</div>
         </div>
       </div>
@@ -312,29 +334,29 @@
     <!-- ============ DASHBOARD ============ -->
     <section class="page" id="page-dashboard">
       <div class="page-head">
-        <div><h1>Dashboard</h1><div class="page-sub">Your financial stress snapshot, updated from your active loans</div></div>
+        <div><h1>Dashboard</h1><div class="page-sub">Your financial stress snapshot, computed from your active loans</div></div>
       </div>
 
       <div class="stat-grid">
         <div class="card stat-card">
           <div class="stat-label">DTI ratio</div>
-          <div class="stat-value">58%</div>
-          <div class="stat-foot"><span class="badge tight dot">Tight</span></div>
+          <div class="stat-value" id="dash-dti">—</div>
+          <div class="stat-foot" id="dash-dti-foot"><span class="badge tight dot">—</span></div>
         </div>
         <div class="card stat-card">
           <div class="stat-label">Monthly surplus</div>
-          <div class="stat-value">₹4,200</div>
-          <div class="stat-foot">After EMIs and expenses</div>
+          <div class="stat-value" id="dash-surplus">—</div>
+          <div class="stat-foot">After EMIs &amp; expenses</div>
         </div>
         <div class="card stat-card">
           <div class="stat-label">Debt stress score</div>
-          <div class="stat-value">71 / 100</div>
-          <div class="stat-foot"><span class="badge high dot">High</span></div>
+          <div class="stat-value" id="dash-stress">— / 100</div>
+          <div class="stat-foot" id="dash-stress-foot"><span class="badge high dot">—</span></div>
         </div>
         <div class="card stat-card">
           <div class="stat-label">Active loans</div>
-          <div class="stat-value">3</div>
-          <div class="stat-foot">Across 2 lenders, 1 NBFC</div>
+          <div class="stat-value" id="dash-loans">—</div>
+          <div class="stat-foot" id="dash-loans-foot">—</div>
         </div>
       </div>
 
@@ -343,16 +365,19 @@
           <div class="section-title">Stress score trend</div>
           <div class="chart-legend">
             <span><i style="background:var(--ink);"></i>Debt stress score</span>
-            <span><i style="background:var(--amber);"></i>Recommended settlement %</span>
+            <span><i style="background:var(--amber);"></i>Settlement %</span>
           </div>
           <div class="chart-wrap">
             <svg viewBox="0 0 560 190" width="100%" height="190" id="trendChart"></svg>
           </div>
+          <div style="font-size:11.5px;color:var(--gray-500);margin-top:8px;font-style:italic;" id="chartNote"></div>
         </div>
-        <div class="card">
-          <div class="section-title">What this means</div>
-          <p style="font-size:13px;color:var(--ink-soft);line-height:1.6;margin:0 0 14px;">Your debt stress score has been rising over the last three months as overdue days increase on your HDFC personal loan. A One Time Settlement now could lower your total repayment before further penalty interest accrues.</p>
-          <button class="btn btn-secondary" style="width:100%;justify-content:center;" data-action="reviewLoan1">Review settlement options</button>
+        <div class="insight-card" id="insightCard">
+          <div class="insight-eyebrow">What this means</div>
+          <div class="insight-text" id="insightText">Loading your financial insight…</div>
+          <div class="insight-action">
+            <button class="btn btn-secondary" style="width:100%;justify-content:center;background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.15);color:#fff;" data-action="goToSettlement">Review settlement options</button>
+          </div>
         </div>
       </div>
 
@@ -382,21 +407,21 @@
                 <option>Personal loan</option><option>Credit card</option><option>Digital lending app</option><option>NBFC loan</option>
               </select>
             </div>
-            <div class="field"><label>Outstanding amount</label><div class="prefix-input"><span>₹</span><input type="number" id="newAmount" placeholder="1,50,000" required></div></div>
-            <div class="field"><label>Monthly EMI</label><div class="prefix-input"><span>₹</span><input type="number" id="newEmi" placeholder="6,500" required></div></div>
-            <div class="field"><label>Overdue days</label><input type="number" id="newOverdue" placeholder="45" required></div>
-            <div class="field"><label>Your monthly income</label><div class="prefix-input"><span>₹</span><input type="number" id="newIncome" placeholder="35,000" required></div></div>
+            <div class="field"><label>Outstanding amount</label><div class="prefix-input"><span>₹</span><input type="number" id="newAmount" placeholder="150000" required></div></div>
+            <div class="field"><label>Monthly EMI</label><div class="prefix-input"><span>₹</span><input type="number" id="newEmi" placeholder="6500" required></div></div>
+            <div class="field"><label>Overdue days</label><input type="number" id="newOverdue" placeholder="45" required min="0"></div>
+            <div class="field"><label>Monthly income</label><div class="prefix-input"><span>₹</span><input type="number" id="newIncome" placeholder="35000" required></div></div>
           </div>
           <div class="actionbar" style="margin-top:18px;">
             <button type="button" class="btn btn-secondary" data-action="toggleAddLoanForm">Cancel</button>
-            <button type="submit" class="btn btn-primary">Add loan</button>
+            <button type="submit" id="addLoanBtn" class="btn btn-primary">Add loan</button>
           </div>
         </form>
       </div>
 
       <div class="card">
         <table>
-          <thead><tr><th>Lender</th><th>Loan amount</th><th>EMI</th><th>Overdue days</th><th>Status</th><th></th></tr></thead>
+          <thead><tr><th>Lender</th><th>Amount</th><th>EMI</th><th>Overdue</th><th>Status</th><th></th></tr></thead>
           <tbody id="loansTableBody"></tbody>
         </table>
       </div>
@@ -405,7 +430,7 @@
     <!-- ============ SETTLEMENT ============ -->
     <section class="page" id="page-settlement">
       <div class="page-head">
-        <div><h1>Settlement</h1><div class="page-sub" id="settlementSub">Reviewing loan with HDFC Bank</div></div>
+        <div><h1>Settlement</h1><div class="page-sub" id="settlementSub">Select a loan to begin</div></div>
         <button class="headbtn" data-action="navigate" data-arg="loans">Change loan</button>
       </div>
 
@@ -443,7 +468,7 @@
               <div class="slider-row-head"><span>Overdue days</span><b id="lbl-overdue">0</b></div>
               <input type="range" id="sl-overdue" min="0" max="270" step="5" data-recompute="1">
             </div>
-            <div class="proto-note">Prototype math, not the real Financial Engine — actual formulas are computed on the backend.</div>
+            <div class="slider-note">Sliders preview a "what-if" scenario using the same formula as the backend. The official recommendation (right) is always computed by the server.</div>
           </div>
         </div>
 
@@ -452,7 +477,7 @@
             <div class="rec-eyebrow">Recommended settlement</div>
             <div class="rec-pct" id="rec-pct">—%</div>
             <div class="rec-amt" id="rec-amt">of ₹0 outstanding</div>
-            <span class="rec-source" id="rec-source">Generated by: AI</span>
+            <span class="rec-source" id="rec-source">Generated by: —</span>
             <div class="rec-mini"><span>Outstanding amount</span><span id="rec-outstanding">₹0</span></div>
             <div class="rec-mini"><span>Monthly EMI</span><span id="rec-emi">₹0</span></div>
             <div class="rec-mini"><span>Monthly income</span><span id="rec-income">₹0</span></div>
@@ -462,21 +487,21 @@
 
       <div class="actionbar">
         <button class="btn btn-secondary" data-action="navigate" data-arg="loans">Back</button>
-        <button class="btn btn-primary" data-action="generateLetterFromSettlement">Generate letter</button>
+        <button class="btn btn-primary" id="genLetterBtn" data-action="generateLetterFromSettlement">Generate letter</button>
       </div>
     </section>
 
     <!-- ============ LETTERS ============ -->
     <section class="page" id="page-letters">
       <div class="page-head">
-        <div><h1>Letters</h1><div class="page-sub">Negotiation letters generated for your One Time Settlement requests</div></div>
-        <button class="headbtn" data-action="regenerateLetter">Regenerate</button>
+        <div><h1>Letters</h1><div class="page-sub">Negotiation letters for your One Time Settlement requests</div></div>
+        <button class="headbtn" data-action="regenerateLetter" id="regenHeadBtn">Regenerate</button>
       </div>
 
       <div class="grid-2">
         <div>
           <div class="letter-toolbar">
-            <button class="btn btn-secondary" data-action="regenerateLetter">↻ Regenerate</button>
+            <button class="btn btn-secondary" data-action="regenerateLetter" id="regenBtn">↻ Regenerate</button>
             <button class="btn btn-secondary" data-action="copyLetter" id="copyBtn">Copy</button>
           </div>
           <div class="letter-paper" id="letterBody"></div>
@@ -492,58 +517,78 @@
 </div>
 
 <script>
-/* ---------------- API config ---------------- */
-// Point this at wherever you run the FastAPI backend (see backend/main.py).
+/* ================================================================
+   FinRelief AI — Frontend v2
+   Talks to the FastAPI backend at API_BASE.
+   Change API_BASE if your server is not on localhost:8000.
+================================================================ */
 const API_BASE = 'http://localhost:8000';
 
 let currentUser = null;
 let authToken = null;
 let authMode = 'login';
-
 let loans = [];
 let letterHistoryData = [];
 let activeLoanId = null;
 let currentLetter = '';
+let currentLetterId = null;
 let currentSettlement = null;
 
-/* ---------------- Helpers ---------------- */
-function inr(n){
-  return '₹' + Math.round(n).toLocaleString('en-IN');
-}
+/* ---- Formatters ---- */
+function inr(n){ return '₹' + Math.round(n).toLocaleString('en-IN'); }
 function pct(n){ return Math.round(n) + '%'; }
+function fmtDate(iso){ return new Date(iso).toLocaleDateString('en-IN', {day:'2-digit', month:'short', year:'numeric'}); }
 
+/* ================================================================
+   Toast notifications
+================================================================ */
+function toast(msg, type='info', duration=3500){
+  const c = document.getElementById('toastContainer');
+  const el = document.createElement('div');
+  el.className = 'toast' + (type !== 'info' ? ' ' + type : '');
+  const icon = type === 'success' ? '✓' : type === 'error' ? '✕' : type === 'warning' ? '⚠' : 'ℹ';
+  el.innerHTML = `<span style="font-size:15px;">${icon}</span><span>${msg}</span>`;
+  c.appendChild(el);
+  setTimeout(() => {
+    el.classList.add('hiding');
+    setTimeout(() => el.remove(), 220);
+  }, duration);
+}
+
+/* ================================================================
+   API helper
+================================================================ */
 async function api(path, options = {}){
   const headers = Object.assign({ 'Content-Type': 'application/json' }, options.headers || {});
   if (authToken) headers['Authorization'] = 'Bearer ' + authToken;
-
   let res;
   try {
     res = await fetch(API_BASE + path, Object.assign({}, options, { headers }));
   } catch (err) {
-    throw new Error('Could not reach the backend at ' + API_BASE + '. Is it running? (uvicorn main:app --port 8000)');
+    throw new Error('Could not reach the backend at ' + API_BASE + '. Is uvicorn running? (uvicorn main:app --port 8000)');
   }
-
   if (!res.ok) {
     let detail = res.statusText;
     try {
       const body = await res.json();
       if (body.detail) detail = typeof body.detail === 'string' ? body.detail : JSON.stringify(body.detail);
-    } catch (e) { /* no JSON body */ }
+    } catch(e){}
     throw new Error(detail);
   }
-
   if (res.status === 204) return null;
   return res.json();
 }
 
-/* ---------------- Auth ---------------- */
+/* ================================================================
+   Auth
+================================================================ */
 function toggleAuthMode(){
   authMode = authMode === 'login' ? 'register' : 'login';
   document.getElementById('nameFieldWrap').style.display = authMode === 'register' ? 'block' : 'none';
   document.getElementById('authSub').textContent = authMode === 'register'
     ? 'Create an account to start tracking your loans'
     : 'Log in to manage your loans and settlements';
-  document.querySelector('#authForm button[type=submit]').textContent = authMode === 'register' ? 'Create account' : 'Log in';
+  document.getElementById('authSubmitBtn').textContent = authMode === 'register' ? 'Create account' : 'Log in';
   document.getElementById('authToggle').innerHTML = authMode === 'register'
     ? 'Already have an account? <a data-action="toggleAuthMode">Log in</a>'
     : 'New here? <a data-action="toggleAuthMode">Create an account</a>';
@@ -556,7 +601,7 @@ async function handleAuth(e){
   const password = document.getElementById('authPassword').value;
   const name = document.getElementById('authName').value.trim();
   const errEl = document.getElementById('authErr');
-  const submitBtn = document.querySelector('#authForm button[type=submit]');
+  const submitBtn = document.getElementById('authSubmitBtn');
   errEl.textContent = '';
 
   if (!email || !password || (authMode === 'register' && !name)) {
@@ -566,7 +611,7 @@ async function handleAuth(e){
 
   submitBtn.disabled = true;
   const originalLabel = submitBtn.textContent;
-  submitBtn.textContent = authMode === 'register' ? 'Creating account…' : 'Logging in…';
+  submitBtn.innerHTML = '<span class="spinner"></span>' + (authMode === 'register' ? 'Creating…' : 'Logging in…');
 
   try {
     const path = authMode === 'register' ? '/auth/register' : '/auth/login';
@@ -581,6 +626,7 @@ async function handleAuth(e){
 
     document.getElementById('authScreen').style.display = 'none';
     document.getElementById('app').style.display = 'flex';
+    toast('Welcome back, ' + currentUser.name + '!', 'success');
     await navigate('dashboard');
   } catch (err) {
     errEl.textContent = err.message;
@@ -592,19 +638,19 @@ async function handleAuth(e){
 }
 
 function logout(){
-  authToken = null;
-  currentUser = null;
-  loans = [];
-  letterHistoryData = [];
-  activeLoanId = null;
-  currentLetter = '';
+  authToken = null; currentUser = null;
+  loans = []; letterHistoryData = [];
+  activeLoanId = null; currentLetter = ''; currentLetterId = null;
   document.getElementById('app').style.display = 'none';
   document.getElementById('authScreen').style.display = 'flex';
   document.getElementById('authErr').textContent = '';
+  document.getElementById('authEmail').value = '';
+  document.getElementById('authPassword').value = '';
 }
 
-
-/* ---------------- Navigation ---------------- */
+/* ================================================================
+   Navigation
+================================================================ */
 async function navigate(pageId){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.navitem').forEach(n=>n.classList.remove('active'));
@@ -613,89 +659,137 @@ async function navigate(pageId){
 
   try {
     if(pageId === 'dashboard') await renderDashboard();
-    if(pageId === 'loans') await renderLoansTable();
+    if(pageId === 'loans')     await renderLoansTable();
     if(pageId === 'settlement') await renderSettlement();
-    if(pageId === 'letters') await renderLettersPage();
+    if(pageId === 'letters')   await renderLettersPage();
   } catch (err) {
     if (err.message && err.message.includes('Could not validate credentials')) {
       logout();
     } else {
-      alert(err.message);
+      toast(err.message, 'error');
     }
   }
 }
 
-/* ---------------- Dashboard ---------------- */
+/* ================================================================
+   Dashboard
+================================================================ */
 async function renderDashboard(){
   await loadLoans();
-  const letters = await api('/letters');
+  const [dashData, letters] = await Promise.all([
+    api('/dashboard'),
+    api('/letters'),
+  ]);
   letterHistoryData = letters;
 
+  // Stat cards
+  const dtiSt = statusFor('dti', dashData.avg_dti);
+  const strSt = statusFor('stress', dashData.overall_stress);
+  document.getElementById('dash-dti').textContent = pct(dashData.avg_dti);
+  document.getElementById('dash-dti-foot').innerHTML = `<span class="badge ${dtiSt.cls} dot">${dtiSt.label}</span>`;
+  document.getElementById('dash-surplus').textContent = inr(dashData.monthly_surplus);
+  document.getElementById('dash-stress').textContent = Math.round(dashData.overall_stress) + ' / 100';
+  document.getElementById('dash-stress-foot').innerHTML = `<span class="badge ${strSt.cls} dot">${strSt.label}</span>`;
+  document.getElementById('dash-loans').textContent = dashData.loan_count;
+  document.getElementById('dash-loans-foot').textContent = dashData.loan_count === 0 ? 'No loans yet' : 'Total debt: ' + inr(dashData.total_debt);
+
+  // Insight text
+  updateInsight(dashData);
+
+  // Settlement history table
   const tbody = document.getElementById('historyTableBody');
   if(letters.length === 0){
     tbody.innerHTML = '<tr><td colspan="4"><div class="empty-state">No settlements yet. Review a loan to get a recommendation.</div></td></tr>';
   } else {
-    tbody.innerHTML = letters.slice(0, 6).map(l => `
+    tbody.innerHTML = letters.slice(0,6).map(l => `
       <tr>
-        <td>${new Date(l.created_at).toLocaleDateString('en-IN', {day:'2-digit', month:'short', year:'numeric'})}</td>
+        <td>${fmtDate(l.created_at)}</td>
         <td>${l.lender}</td>
         <td class="num">${Math.round(l.settlement_pct)}%</td>
-        <td><span class="badge tight">Fallback</span></td>
+        <td><span class="badge ${l.source === 'AI' ? 'ai' : 'tight'}">${l.source}</span></td>
       </tr>
     `).join('');
   }
 
-  // Live summary stats from real loan data
-  if (loans.length > 0) {
-    const l = loans[0];
-    const m = computeMetrics(l.income, l.emi, l.overdue_days, l.amount);
-    document.querySelectorAll('.stat-grid .stat-value')[0].textContent = pct(m.dti);
-    document.querySelectorAll('.stat-grid .stat-value')[1].textContent = inr(m.surplus);
-    document.querySelectorAll('.stat-grid .stat-value')[2].textContent = Math.round(m.stress) + ' / 100';
-    document.querySelectorAll('.stat-grid .stat-value')[3].textContent = loans.length;
-  }
-
-  drawTrendChart();
+  // Trend chart
+  await drawTrendChart();
 }
 
-function drawTrendChart(){
-  // NOTE: illustrative only — the backend does not yet store historical
-  // stress-score/settlement snapshots over time, so this stays mock data.
-  const svg = document.getElementById('trendChart');
-  const stress = [52, 58, 61, 65, 68, 71];
-  const settle = [30, 33, 35, 38, 40, 42];
-  const months = ['Jan','Feb','Mar','Apr','May','Jun'];
-  const w = 560, h = 190, padL = 30, padB = 24, padT = 10, padR = 10;
-  const plotW = w - padL - padR, plotH = h - padT - padB;
-  const maxV = 100;
+function updateInsight(dash){
+  const el = document.getElementById('insightText');
+  if (dash.loan_count === 0) {
+    el.textContent = 'You have no loans on record yet. Add your first loan to start tracking your debt stress score and get personalised settlement recommendations.';
+    return;
+  }
+  const stress = dash.overall_stress;
+  const dti = dash.avg_dti;
+  const surplus = dash.monthly_surplus;
+  let msg = '';
+  if (stress >= 65) {
+    msg = `Your average debt stress score of ${Math.round(stress)}/100 is high — driven by a ${pct(dti)} debt-to-income ratio and ${inr(surplus)} monthly surplus. Initiating a One Time Settlement now could significantly reduce your total repayment burden.`;
+  } else if (stress >= 40) {
+    msg = `Your debt stress is moderate at ${Math.round(stress)}/100. With a ${pct(dti)} DTI and ${inr(surplus)} left after EMIs, you have some breathing room — but it's worth reviewing settlement options before overdue days increase.`;
+  } else {
+    msg = `Your financial position looks manageable — stress score ${Math.round(stress)}/100 and ${pct(dti)} DTI. Keep monitoring as overdue days increase your settlement leverage window.`;
+  }
+  el.textContent = msg;
+}
 
+async function drawTrendChart(){
+  const svg = document.getElementById('trendChart');
+  const noteEl = document.getElementById('chartNote');
+  let stress, settle, labels, isReal = false;
+
+  try {
+    const snaps = await api('/snapshots?limit=30');
+    if (snaps && snaps.length >= 2) {
+      stress = snaps.map(s => s.stress_score);
+      settle = snaps.map(s => s.settlement_pct);
+      labels = snaps.map(s => {
+        const d = new Date(s.created_at);
+        return d.getDate() + '/' + (d.getMonth()+1);
+      });
+      isReal = true;
+      noteEl.textContent = 'Showing ' + snaps.length + ' real data point' + (snaps.length > 1 ? 's' : '') + ' from your settlement history.';
+    }
+  } catch(e){}
+
+  if (!isReal) {
+    stress = [52,58,61,65,68,71];
+    settle = [30,33,35,38,40,42];
+    labels = ['Jan','Feb','Mar','Apr','May','Jun'];
+    noteEl.textContent = 'Showing illustrative data — visit Settlement for your first real data point.';
+  }
+
+  const w=560,h=190,padL=30,padB=24,padT=10,padR=10;
+  const plotW=w-padL-padR, plotH=h-padT-padB;
+  const maxV=100;
   function pathFor(arr){
     return arr.map((v,i)=>{
-      const x = padL + (i/(arr.length-1)) * plotW;
-      const y = padT + plotH - (v/maxV) * plotH;
-      return (i===0?'M':'L') + x.toFixed(1) + ',' + y.toFixed(1);
+      const x=padL+(i/(arr.length-1))*plotW;
+      const y=padT+plotH-(v/maxV)*plotH;
+      return (i===0?'M':'L')+x.toFixed(1)+','+y.toFixed(1);
     }).join(' ');
   }
-
-  let gridLines = '';
+  let gridLines='';
   for(let i=0;i<=4;i++){
-    const y = padT + (i/4)*plotH;
-    gridLines += `<line x1="${padL}" y1="${y}" x2="${w-padR}" y2="${y}" stroke="#EDEAE1" stroke-width="1"/>`;
+    const y=padT+(i/4)*plotH;
+    gridLines+=`<line x1="${padL}" y1="${y}" x2="${w-padR}" y2="${y}" stroke="#EDEAE1" stroke-width="1"/>`;
   }
-
-  let xLabels = months.map((m,i)=>{
-    const x = padL + (i/(months.length-1)) * plotW;
+  let xLabels=labels.map((m,i)=>{
+    const x=padL+(i/(labels.length-1))*plotW;
     return `<text x="${x}" y="${h-6}" font-size="10" fill="#7A776E" text-anchor="middle" font-family="Inter">${m}</text>`;
   }).join('');
-
   svg.innerHTML = gridLines + xLabels +
     `<path d="${pathFor(stress)}" fill="none" stroke="#1B1A17" stroke-width="2"/>` +
     `<path d="${pathFor(settle)}" fill="none" stroke="#B8622B" stroke-width="2" stroke-dasharray="4 3"/>` +
-    stress.map((v,i)=>{const x=padL+(i/(stress.length-1))*plotW;const y=padT+plotH-(v/maxV)*plotH;return `<circle cx="${x}" cy="${y}" r="3" fill="#1B1A17"/>`}).join('') +
-    settle.map((v,i)=>{const x=padL+(i/(settle.length-1))*plotW;const y=padT+plotH-(v/maxV)*plotH;return `<circle cx="${x}" cy="${y}" r="3" fill="#B8622B"/>`}).join('');
+    stress.map((v,i)=>{const x=padL+(i/(stress.length-1))*plotW;const y=padT+plotH-(v/maxV)*plotH;return `<circle cx="${x}" cy="${y}" r="3" fill="#1B1A17"/>`;}).join('') +
+    settle.map((v,i)=>{const x=padL+(i/(settle.length-1))*plotW;const y=padT+plotH-(v/maxV)*plotH;return `<circle cx="${x}" cy="${y}" r="3" fill="#B8622B"/>`;}).join('');
 }
 
-/* ---------------- Loans ---------------- */
+/* ================================================================
+   Loans
+================================================================ */
 function toggleAddLoanForm(){
   const el = document.getElementById('addLoanCard');
   el.style.display = el.style.display === 'none' ? 'block' : 'none';
@@ -714,22 +808,34 @@ async function addLoan(e){
   const overdue_days = parseInt(document.getElementById('newOverdue').value);
   const income = parseFloat(document.getElementById('newIncome').value);
 
-  const submitBtn = e.target.querySelector('button[type=submit]');
-  submitBtn.disabled = true;
+  const btn = document.getElementById('addLoanBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Adding…';
   try {
-    await api('/loans', {
-      method: 'POST',
-      body: JSON.stringify({ lender, loan_type, amount, emi, overdue_days, income })
-    });
+    await api('/loans', { method:'POST', body:JSON.stringify({lender,loan_type,amount,emi,overdue_days,income}) });
     document.getElementById('addLoanCard').style.display = 'none';
     e.target.reset();
     await renderLoansTable();
+    toast('Loan added successfully.', 'success');
   } catch (err) {
-    alert(err.message);
+    toast(err.message, 'error');
   } finally {
-    submitBtn.disabled = false;
+    btn.disabled = false;
+    btn.textContent = 'Add loan';
   }
   return false;
+}
+
+async function deleteLoan(id){
+  if (!confirm('Delete this loan? This will also remove its letters and history. This cannot be undone.')) return;
+  try {
+    await api('/loans/' + id, { method:'DELETE' });
+    if (activeLoanId === id) activeLoanId = null;
+    await renderLoansTable();
+    toast('Loan deleted.', 'warning');
+  } catch (err) {
+    toast(err.message, 'error');
+  }
 }
 
 function overdueStatus(days){
@@ -738,25 +844,77 @@ function overdueStatus(days){
   return {label:'Overdue', cls:'high'};
 }
 
+function openEditRow(loan){
+  closeAllEditRows();
+  const row = document.getElementById('edit-row-' + loan.id);
+  if (row) row.style.display = 'table-row';
+}
+
+function closeAllEditRows(){
+  document.querySelectorAll('.edit-row').forEach(r => r.style.display = 'none');
+}
+
+async function saveEditLoan(id){
+  const lender = document.getElementById('edit-lender-'+id).value.trim();
+  const loan_type = document.getElementById('edit-type-'+id).value;
+  const amount = parseFloat(document.getElementById('edit-amount-'+id).value);
+  const emi = parseFloat(document.getElementById('edit-emi-'+id).value);
+  const overdue_days = parseInt(document.getElementById('edit-overdue-'+id).value);
+  const income = parseFloat(document.getElementById('edit-income-'+id).value);
+  const btn = document.getElementById('save-edit-'+id);
+  btn.disabled = true; btn.innerHTML='<span class="spinner dark"></span>';
+  try {
+    await api('/loans/'+id, { method:'PATCH', body:JSON.stringify({lender,loan_type,amount,emi,overdue_days,income}) });
+    await renderLoansTable();
+    toast('Loan updated.', 'success');
+  } catch(err){ toast(err.message,'error'); btn.disabled=false; btn.textContent='Save'; }
+}
+
 async function renderLoansTable(){
   await loadLoans();
   const tbody = document.getElementById('loansTableBody');
   if(loans.length === 0){
-    tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state">No loans added yet. Click "Add loan" to get started.</div></td></tr>';
+    tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state">No loans added yet. Click "+ Add loan" to get started.</div></td></tr>';
     return;
   }
   tbody.innerHTML = loans.map(l => {
     const st = overdueStatus(l.overdue_days);
     return `
       <tr class="clickable-row" data-action="selectLoan" data-arg="${l.id}">
-        <td>
-          <div class="loan-name-cell"><b>${l.lender}</b><span>${l.loan_type}</span></div>
-        </td>
+        <td><div class="loan-name-cell"><b>${l.lender}</b><span>${l.loan_type}</span></div></td>
         <td>${inr(l.amount)}</td>
         <td>${inr(l.emi)}</td>
         <td>${l.overdue_days} days</td>
         <td><span class="badge ${st.cls} dot">${st.label}</span></td>
-        <td style="text-align:right;"><span style="font-size:12px;color:var(--gray-500);">Review →</span></td>
+        <td>
+          <div class="action-cell" onclick="event.stopPropagation()">
+            <button class="btn-icon edit" onclick="openEditRow(${JSON.stringify(l).replace(/"/g,'&quot;')})">✎ Edit</button>
+            <button class="btn-icon" onclick="deleteLoan(${l.id})">✕ Delete</button>
+          </div>
+        </td>
+      </tr>
+      <tr class="edit-row" id="edit-row-${l.id}" style="display:none;">
+        <td colspan="6">
+          <div class="edit-form">
+            <div class="field"><label>Lender</label><input id="edit-lender-${l.id}" value="${l.lender}" type="text"></div>
+            <div class="field"><label>Type</label>
+              <select id="edit-type-${l.id}">
+                <option ${l.loan_type==='Personal loan'?'selected':''}>Personal loan</option>
+                <option ${l.loan_type==='Credit card'?'selected':''}>Credit card</option>
+                <option ${l.loan_type==='Digital lending app'?'selected':''}>Digital lending app</option>
+                <option ${l.loan_type==='NBFC loan'?'selected':''}>NBFC loan</option>
+              </select>
+            </div>
+            <div class="field"><label>Amount (₹)</label><input id="edit-amount-${l.id}" value="${l.amount}" type="number"></div>
+            <div class="field"><label>EMI (₹)</label><input id="edit-emi-${l.id}" value="${l.emi}" type="number"></div>
+            <div class="field"><label>Overdue days</label><input id="edit-overdue-${l.id}" value="${l.overdue_days}" type="number" min="0"></div>
+            <div class="field"><label>Income (₹)</label><input id="edit-income-${l.id}" value="${l.income}" type="number"></div>
+          </div>
+          <div style="display:flex;gap:8px;padding:10px 14px;border-top:1px solid var(--hairline);">
+            <button id="save-edit-${l.id}" class="btn btn-primary" style="padding:8px 16px;font-size:13px;" onclick="saveEditLoan(${l.id})">Save</button>
+            <button class="btn btn-secondary" style="padding:8px 16px;font-size:13px;" onclick="closeAllEditRows()">Cancel</button>
+          </div>
+        </td>
       </tr>
     `;
   }).join('');
@@ -767,40 +925,24 @@ function selectLoan(id){
   navigate('settlement');
 }
 
-/* ---------------- Settlement ---------------- */
-// Mirrors the scoring formula in backend/main.py so the sliders can preview
-// live "what-if" changes before you commit to a loan's real settlement.
+/* ================================================================
+   Settlement
+================================================================ */
 function computeMetrics(income, emi, overdue, amount){
-  const dti = Math.min(100, (emi / Math.max(income,1)) * 100);
-  const surplus = income - emi - (income * 0.4); // 40% assumed living expenses, illustrative only
-  let stress = (dti * 0.5) + (Math.min(overdue,180)/180 * 40) + (surplus < 0 ? 10 : 0);
-  stress = Math.max(0, Math.min(100, stress));
-  let settlePct = 25 + (stress * 0.35);
-  settlePct = Math.max(20, Math.min(70, settlePct));
-  return { dti, surplus, stress, settlePct };
+  const dti = Math.min(100,(emi/Math.max(income,1))*100);
+  const surplus = income - emi - (income*0.4);
+  let stress = (dti*0.5) + (Math.min(overdue,180)/180*40) + (surplus<0?10:0);
+  stress = Math.max(0,Math.min(100,stress));
+  let settlePct = 25+(stress*0.35);
+  settlePct = Math.max(20,Math.min(70,settlePct));
+  return {dti,surplus,stress,settlePct};
 }
 
-function statusFor(kind, val){
-  if(kind === 'dti'){
-    if(val < 35) return {label:'Healthy', cls:'healthy'};
-    if(val < 55) return {label:'Tight', cls:'tight'};
-    return {label:'High', cls:'high'};
-  }
-  if(kind === 'surplus'){
-    if(val > 5000) return {label:'Healthy', cls:'healthy'};
-    if(val >= 0) return {label:'Tight', cls:'tight'};
-    return {label:'High risk', cls:'high'};
-  }
-  if(kind === 'stress'){
-    if(val < 40) return {label:'Healthy', cls:'healthy'};
-    if(val < 65) return {label:'Tight', cls:'tight'};
-    return {label:'High', cls:'high'};
-  }
-  if(kind === 'overdue'){
-    if(val === 0) return {label:'Current', cls:'healthy'};
-    if(val <= 30) return {label:'Tight', cls:'tight'};
-    return {label:'High', cls:'high'};
-  }
+function statusFor(kind,val){
+  if(kind==='dti'){ if(val<35)return{label:'Healthy',cls:'healthy'};if(val<55)return{label:'Tight',cls:'tight'};return{label:'High',cls:'high'}; }
+  if(kind==='surplus'){ if(val>5000)return{label:'Healthy',cls:'healthy'};if(val>=0)return{label:'Tight',cls:'tight'};return{label:'High risk',cls:'high'}; }
+  if(kind==='stress'){ if(val<40)return{label:'Healthy',cls:'healthy'};if(val<65)return{label:'Tight',cls:'tight'};return{label:'High',cls:'high'}; }
+  if(kind==='overdue'){ if(val===0)return{label:'Current',cls:'healthy'};if(val<=30)return{label:'Tight',cls:'tight'};return{label:'High',cls:'high'}; }
 }
 
 async function renderSettlement(){
@@ -812,21 +954,24 @@ async function renderSettlement(){
     return;
   }
   document.getElementById('settlementSub').textContent = 'Reviewing loan with ' + loan.lender;
-
   document.getElementById('sl-income').value = loan.income;
   document.getElementById('sl-emi').value = loan.emi;
   document.getElementById('sl-overdue').value = loan.overdue_days;
-
   window._settlementLoan = loan;
 
-  // Pull the authoritative recommendation from the backend's Financial Engine.
   try {
     currentSettlement = await api('/settlement/' + loan.id);
-    document.getElementById('rec-source').textContent = 'Generated by: ' + currentSettlement.source;
+    const srcEl = document.getElementById('rec-source');
+    if (currentSettlement.source === 'AI') {
+      srcEl.textContent = '✦ Generated by Gemini AI';
+      srcEl.className = 'rec-source ai-source';
+    } else {
+      srcEl.textContent = 'Generated by: Formula Engine';
+      srcEl.className = 'rec-source';
+    }
   } catch (err) {
     currentSettlement = null;
   }
-
   recompute();
 }
 
@@ -844,27 +989,27 @@ function recompute(){
   const m = computeMetrics(income, emi, overdue, loan.amount);
 
   document.getElementById('brk-dti').textContent = pct(m.dti);
-  const dtiSt = statusFor('dti', m.dti);
-  document.getElementById('brk-dti-badge').className = 'badge ' + dtiSt.cls;
-  document.getElementById('brk-dti-badge').textContent = dtiSt.label;
+  const dtiSt = statusFor('dti',m.dti);
+  document.getElementById('brk-dti-badge').className='badge '+dtiSt.cls;
+  document.getElementById('brk-dti-badge').textContent=dtiSt.label;
 
   document.getElementById('brk-surplus').textContent = inr(m.surplus);
-  const surSt = statusFor('surplus', m.surplus);
-  document.getElementById('brk-surplus-badge').className = 'badge ' + surSt.cls;
-  document.getElementById('brk-surplus-badge').textContent = surSt.label;
+  const surSt = statusFor('surplus',m.surplus);
+  document.getElementById('brk-surplus-badge').className='badge '+surSt.cls;
+  document.getElementById('brk-surplus-badge').textContent=surSt.label;
 
-  document.getElementById('brk-stress').textContent = Math.round(m.stress) + ' / 100';
-  const strSt = statusFor('stress', m.stress);
-  document.getElementById('brk-stress-badge').className = 'badge ' + strSt.cls;
-  document.getElementById('brk-stress-badge').textContent = strSt.label;
+  document.getElementById('brk-stress').textContent = Math.round(m.stress)+' / 100';
+  const strSt = statusFor('stress',m.stress);
+  document.getElementById('brk-stress-badge').className='badge '+strSt.cls;
+  document.getElementById('brk-stress-badge').textContent=strSt.label;
 
-  document.getElementById('brk-overdue').textContent = overdue + ' days';
-  const ovSt = statusFor('overdue', overdue);
-  document.getElementById('brk-overdue-badge').className = 'badge ' + ovSt.cls;
-  document.getElementById('brk-overdue-badge').textContent = ovSt.label;
+  document.getElementById('brk-overdue').textContent = overdue+' days';
+  const ovSt = statusFor('overdue',overdue);
+  document.getElementById('brk-overdue-badge').className='badge '+ovSt.cls;
+  document.getElementById('brk-overdue-badge').textContent=ovSt.label;
 
-  document.getElementById('rec-pct').textContent = Math.round(m.settlePct) + '%';
-  document.getElementById('rec-amt').textContent = 'of ' + inr(loan.amount) + ' outstanding (≈ ' + inr(loan.amount * m.settlePct/100) + ')';
+  document.getElementById('rec-pct').textContent = Math.round(m.settlePct)+'%';
+  document.getElementById('rec-amt').textContent = 'of '+inr(loan.amount)+' outstanding (≈ '+inr(loan.amount*m.settlePct/100)+')';
   document.getElementById('rec-outstanding').textContent = inr(loan.amount);
   document.getElementById('rec-emi').textContent = inr(emi);
   document.getElementById('rec-income').textContent = inr(income);
@@ -872,55 +1017,78 @@ function recompute(){
   window._currentMetrics = m;
 }
 
-/* ---------------- Letters ---------------- */
+/* ================================================================
+   Letters
+================================================================ */
 async function generateLetterFromSettlement(){
   const loan = window._settlementLoan;
-  if (!loan) return;
-  const m = window._currentMetrics || computeMetrics(loan.income, loan.emi, loan.overdue_days, loan.amount);
+  if (!loan) { toast('No loan selected. Go to Loans and click Review.', 'warning'); return; }
+  const m = window._currentMetrics || computeMetrics(loan.income,loan.emi,loan.overdue_days,loan.amount);
+  const btn = document.getElementById('genLetterBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Generating…';
   try {
-    const letter = await api('/letters', {
-      method: 'POST',
-      body: JSON.stringify({ loan_id: loan.id, settlement_pct: m.settlePct })
-    });
+    const letter = await api('/letters', { method:'POST', body:JSON.stringify({loan_id:loan.id, settlement_pct:m.settlePct}) });
     currentLetter = letter.body;
+    currentLetterId = letter.id;
+    toast('Letter generated' + (letter.source === 'AI' ? ' by Gemini AI' : '') + '!', 'success');
     navigate('letters');
   } catch (err) {
-    alert(err.message);
+    toast(err.message, 'error');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Generate letter';
   }
 }
 
 async function regenerateLetter(){
   const loan = window._settlementLoan || loans[0];
-  if (!loan) return;
-  const m = window._currentMetrics || computeMetrics(loan.income, loan.emi, loan.overdue_days, loan.amount);
-  // Simulate slight variation on regenerate
-  const jitter = Math.max(20, Math.min(70, m.settlePct + (Math.random()*4 - 2)));
+  if (!loan) { toast('Review a loan first to generate a letter.', 'warning'); return; }
+  const m = window._currentMetrics || computeMetrics(loan.income,loan.emi,loan.overdue_days,loan.amount);
+  const jitter = Math.max(20,Math.min(70,m.settlePct+(Math.random()*4-2)));
+  const btn = document.getElementById('regenBtn');
+  const headBtn = document.getElementById('regenHeadBtn');
+  if(btn){ btn.disabled=true; btn.innerHTML='<span class="spinner dark"></span> Regenerating…'; }
+  if(headBtn){ headBtn.disabled=true; }
   try {
-    const letter = await api('/letters', {
-      method: 'POST',
-      body: JSON.stringify({ loan_id: loan.id, settlement_pct: jitter })
-    });
+    const letter = await api('/letters', { method:'POST', body:JSON.stringify({loan_id:loan.id, settlement_pct:jitter}) });
     currentLetter = letter.body;
+    currentLetterId = letter.id;
     await renderLettersPage();
+    toast('Letter regenerated.', 'success');
   } catch (err) {
-    alert(err.message);
+    toast(err.message, 'error');
+  } finally {
+    if(btn){ btn.disabled=false; btn.textContent='↻ Regenerate'; }
+    if(headBtn){ headBtn.disabled=false; headBtn.textContent='Regenerate'; }
   }
 }
 
 function copyLetter(){
   navigator.clipboard.writeText(currentLetter).catch(()=>{});
   const btn = document.getElementById('copyBtn');
-  const original = btn.textContent;
-  btn.textContent = 'Copied';
-  setTimeout(()=>{ btn.textContent = original; }, 1400);
+  btn.textContent = '✓ Copied';
+  setTimeout(()=>{ btn.textContent='Copy'; }, 1400);
+  toast('Letter copied to clipboard.', 'success');
+}
+
+function loadLetterFromHistory(letter){
+  currentLetter = letter.body;
+  currentLetterId = letter.id;
+  document.getElementById('letterBody').textContent = currentLetter;
+  // Update active styling
+  document.querySelectorAll('.history-item').forEach(el => {
+    el.classList.toggle('active-letter', el.dataset.letterId === String(letter.id));
+  });
 }
 
 async function renderLettersPage(){
   const letters = await api('/letters');
   letterHistoryData = letters;
 
-  if(!currentLetter && letters.length > 0){
+  if (!currentLetter && letters.length > 0) {
     currentLetter = letters[0].body;
+    currentLetterId = letters[0].id;
   }
   document.getElementById('letterBody').textContent = currentLetter || 'No letter generated yet — review a loan\'s settlement and click "Generate letter."';
 
@@ -929,32 +1097,32 @@ async function renderLettersPage(){
     list.innerHTML = '<div class="empty-state">No letters generated yet.</div>';
   } else {
     list.innerHTML = letters.map(l => `
-      <div class="history-item">
+      <div class="history-item${currentLetterId === l.id ? ' active-letter' : ''}"
+           data-letter-id="${l.id}" data-action="loadLetter" data-arg="${l.id}">
         <div>
           <div class="hl-lender">${l.lender}</div>
-          <div class="hl-meta">${new Date(l.created_at).toLocaleDateString('en-IN', {day:'2-digit', month:'short', year:'numeric'})} · ${Math.round(l.settlement_pct)}% settlement</div>
+          <div class="hl-meta">${fmtDate(l.created_at)} · ${Math.round(l.settlement_pct)}% settlement</div>
         </div>
-        <span class="badge healthy">Saved</span>
+        <span class="badge ${l.source === 'AI' ? 'ai' : 'tight'}">${l.source}</span>
       </div>
     `).join('');
   }
 }
 
-/* ---------------- Event wiring (no inline handlers) ---------------- */
+/* ================================================================
+   Event wiring
+================================================================ */
 document.addEventListener('DOMContentLoaded', () => {
-  // Forms
   const authFormEl = document.querySelector('[data-form="auth"]');
   if (authFormEl) authFormEl.addEventListener('submit', handleAuth);
 
   const addLoanFormEl = document.querySelector('[data-form="addLoan"]');
   if (addLoanFormEl) addLoanFormEl.addEventListener('submit', addLoan);
 
-  // Sliders
   document.querySelectorAll('[data-recompute]').forEach(el => {
     el.addEventListener('input', recompute);
   });
 
-  // Delegated clicks for everything tagged data-action (covers dynamically rendered content too)
   document.addEventListener('click', (e) => {
     const el = e.target.closest('[data-action]');
     if (!el) return;
@@ -962,15 +1130,23 @@ document.addEventListener('DOMContentLoaded', () => {
     const arg = el.dataset.arg;
 
     switch (action) {
-      case 'navigate': navigate(arg); break;
-      case 'logout': logout(); break;
-      case 'toggleAuthMode': toggleAuthMode(); break;
-      case 'toggleAddLoanForm': toggleAddLoanForm(); break;
+      case 'navigate':               navigate(arg); break;
+      case 'logout':                 logout(); break;
+      case 'toggleAuthMode':         toggleAuthMode(); break;
+      case 'toggleAddLoanForm':      toggleAddLoanForm(); break;
       case 'generateLetterFromSettlement': generateLetterFromSettlement(); break;
-      case 'regenerateLetter': regenerateLetter(); break;
-      case 'copyLetter': copyLetter(); break;
-      case 'selectLoan': selectLoan(parseInt(arg)); break;
-      case 'reviewLoan1': navigate('settlement'); selectLoan(loans[0] ? loans[0].id : null); break;
+      case 'regenerateLetter':       regenerateLetter(); break;
+      case 'copyLetter':             copyLetter(); break;
+      case 'selectLoan':             selectLoan(parseInt(arg)); break;
+      case 'goToSettlement':         // Dashboard insight button — go to settlement with first loan
+        if (loans[0]) { activeLoanId = loans[0].id; navigate('settlement'); }
+        else navigate('loans');
+        break;
+      case 'loadLetter': {
+        const letter = letterHistoryData.find(l => l.id === parseInt(arg));
+        if (letter) loadLetterFromHistory(letter);
+        break;
+      }
     }
   });
 });
