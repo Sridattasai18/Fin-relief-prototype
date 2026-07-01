@@ -194,7 +194,7 @@ class LoanOut(LoanIn):
 
 class LetterIn(BaseModel):
     loan_id: int
-    settlement_pct: float
+    settlement_pct: Optional[float] = None
 
 
 class LetterOut(BaseModel):
@@ -563,13 +563,17 @@ def create_letter(payload: LetterIn, current_user: User = Depends(get_current_us
     if not loan:
         raise HTTPException(status_code=404, detail="Loan not found.")
 
-    body, source = _generate_letter_body(current_user.name, current_user.email, loan, payload.settlement_pct)
+    # Recompute server-side — never trust client-supplied percentage
+    score = _score(loan.income, loan.emi, loan.overdue_days)
+    settlement_pct = round(score["settle_pct"], 2)
+
+    body, source = _generate_letter_body(current_user.name, current_user.email, loan, settlement_pct)
 
     letter = Letter(
         owner_id=current_user.id,
         loan_id=loan.id,
         lender=loan.lender,
-        settlement_pct=payload.settlement_pct,
+        settlement_pct=settlement_pct,
         body=body,
         source=source,
     )
