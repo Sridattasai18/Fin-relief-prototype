@@ -2,6 +2,9 @@
 
 A full-stack app for tracking debt, running settlement math, and drafting negotiation letters. Built during my SmartBridge internship.
 
+**🌐 Live Demo:** [https://fin-relief-prototype.onrender.com/](https://fin-relief-prototype.onrender.com/)  
+*(Note: Deployed on Render's free tier, so the server may take up to a minute to spin up/load on your first visit!)*
+
 For the "why" behind this project and a walkthrough of what it looks like, read [ABOUT.md](ABOUT.md). This file is just the setup.
 
 ## Stack
