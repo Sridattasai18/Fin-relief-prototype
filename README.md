@@ -18,6 +18,39 @@ It's not magic, and it doesn't guarantee anything — but it gives you clarity a
 
 ---
 
+## 🎨 UI Demo & Visual Walkthrough
+
+### 🚀 Instant Offline UI Demo
+If you want to see how the app looks and feels **before running any servers or installing dependencies**, you can open the static file **[finrelief-design-prototype.html](file:///c:/Users/kalig/OneDrive/Desktop/SMARTBRIDGE-PROJ/Fin-track-prototype/finrelief-design-prototype.html)** directly in your browser. It runs completely offline with mock data, letting you explore the layout immediately.
+
+---
+
+### 📸 Visual App Walkthrough
+
+Below is a step-by-step look at how the real app works, from account creation to AI letter generation.
+
+#### 1. Secure Access (Register & Login)
+Keep your personal financial data private with password hashing and secure session tokens.
+![Secure Login Screen](docs/screenshots/01_login.png)
+
+#### 2. The Overview (Dashboard)
+A snapshot of your overall debt-to-income (DTI) ratio, monthly surplus, debt stress score, and active loans, plus a historical trend chart showing your stress trajectory over time.
+![Financial Dashboard](docs/screenshots/02_dashboard.png)
+
+#### 3. Your Active Debt (Loans Page)
+Manage your debts in one simple table. Add new loans or update existing EMI/overdue parameters inline at any time.
+![Active Loans List](docs/screenshots/03_loans.png)
+
+#### 4. The Recommendation (Settlement Analyzer)
+Analyze your DTI, surplus, and stress levels. Drag the sliders to explore "what-if" scenarios, and view the backend's official One Time Settlement suggestion.
+![One Time Settlement Analysis](docs/screenshots/04_settlement.png)
+
+#### 5. AI Letter Generation (Letters Page)
+Read and copy the professional settlement letters drafted for you. Access your complete letter history at any time.
+![AI-Generated Settlement Letter](docs/screenshots/05_letters.png)
+
+---
+
 ## Features
 
 ### 🏠 Dashboard
@@ -235,7 +268,7 @@ uvicorn main:app --reload --port 8000
 
 ## License
 
-MIT — do whatever you want with it, just don't put it in production with real financial data without the security hardening mentioned above.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details. You are free to modify and use it, but please do not run it in production with real financial data without the necessary security hardening.
 
 ---
 
